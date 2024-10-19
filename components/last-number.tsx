@@ -50,8 +50,8 @@ export function LastNumber({
     return (
       <div className="text-center mb-8 w-full">
         <div className="text-2xl md:text-4xl">Esperando números</div>
-        <div className="text-6xl md:text-9xl font-bold mb-4 text-primary">
-          <Loader2 className="animate-spin" />
+        <div className="text-6xl md:text-9xl font-bold mb-4 text-primary flex items-center justify-center pt-6">
+          <Loader2 className="animate-spin text-xl" />
         </div>
       </div>
     );
