@@ -24,6 +24,7 @@ export function SaveDrawnNumbers({
   return (
     <div className="mb-8">
       <form
+        // @ts-ignore
         action={async (formData: FormData) => {
           setError(null);
           const result = await handleSubmitNumberBinded(formData);
