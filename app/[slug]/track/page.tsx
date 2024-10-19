@@ -10,7 +10,6 @@ import {
 	switchActiveGame,
 	deactivateActiveGame,
 	getActiveGame,
-	saveDrawnNumber,
 	deleteGame,
 	deleteDrawnNumber,
 } from "@/utils/bingoUtils";
@@ -24,51 +23,70 @@ import {
 	AlertDialogDescription,
 	AlertDialogFooter,
 	AlertDialogCancel,
-	AlertDialogAction,
 } from "@/components/ui/alert-dialog";
-import { AlertDialogActionButton } from "@/components/alert-dialog-action";
 import { EditGameName } from "@/components/edit-game-name";
+import { PasswordProtection } from "@/components/password-protection";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { setAuthCookie, isAuthenticated, verifyPassword } from "@/utils/auth";
 
 async function handleCreateNewGame(formData: FormData) {
 	"use server";
-	const eventId = Number.parseInt(formData.get("eventId") as string);
-	const name = formData.get("name") as string;
-	await createNewGame(eventId, name);
 	const slug = formData.get("slug") as string;
+	if (!(await isAuthenticated(slug))) {
+		redirect(`/${slug}/track`);
+	}
+	const name = formData.get("name") as string;
+	await createNewGame(Number.parseInt(formData.get("eventId") as string), name);
 	revalidatePath(`/${slug}/track`);
 }
 
 async function handleSwitchGame(formData: FormData) {
 	"use server";
-	const eventId = Number.parseInt(formData.get("eventId") as string);
-	const gameId = Number.parseInt(formData.get("gameId") as string);
-	await switchActiveGame(eventId, gameId);
 	const slug = formData.get("slug") as string;
+	if (!(await isAuthenticated(slug))) {
+		redirect(`/${slug}/track`);
+	}
+	const gameId = Number.parseInt(formData.get("gameId") as string);
+	await switchActiveGame(
+		Number.parseInt(formData.get("eventId") as string),
+		gameId,
+	);
 	revalidatePath(`/${slug}/track`);
 }
 
 async function handleDeactivateGame(formData: FormData) {
 	"use server";
-	const eventId = Number.parseInt(formData.get("eventId") as string);
-	await deactivateActiveGame(eventId);
 	const slug = formData.get("slug") as string;
+	if (!(await isAuthenticated(slug))) {
+		redirect(`/${slug}/track`);
+	}
+	await deactivateActiveGame(
+		Number.parseInt(formData.get("eventId") as string),
+	);
 	revalidatePath(`/${slug}/track`);
 }
 
 async function handleDeleteGame(formData: FormData) {
 	"use server";
-	const eventId = Number.parseInt(formData.get("eventId") as string);
-	const gameId = Number.parseInt(formData.get("gameId") as string);
 	const slug = formData.get("slug") as string;
+	if (!(await isAuthenticated(slug))) {
+		redirect(`/${slug}/track`);
+	}
+	const gameId = Number.parseInt(formData.get("gameId") as string);
+	const eventId = Number.parseInt(formData.get("eventId") as string);
 	await deleteGame(eventId, gameId);
 	revalidatePath(`/${slug}/track`);
 }
 
 async function handleDeleteDrawnNumber(formData: FormData) {
 	"use server";
+	const slug = formData.get("slug") as string;
+	if (!(await isAuthenticated(slug))) {
+		redirect(`/${slug}/track`);
+	}
 	const gameId = Number.parseInt(formData.get("gameId") as string);
 	const numberId = Number.parseInt(formData.get("numberId") as string);
-	const slug = formData.get("slug") as string;
 	try {
 		await deleteDrawnNumber(gameId, numberId);
 		revalidatePath(`/${slug}/track`);
@@ -78,7 +96,36 @@ async function handleDeleteDrawnNumber(formData: FormData) {
 	}
 }
 
+async function handlePasswordSubmit(formData: FormData) {
+	"use server";
+	const password = formData.get("password") as string;
+	const slug = formData.get("slug") as string;
+
+	const event = await getActiveEvent({ slug });
+	if (!event) {
+		return;
+	}
+
+	const isValid = await verifyPassword(password, slug);
+	if (isValid) {
+		await setAuthCookie(event.id);
+		redirect(`/${slug}/track`);
+	}
+	// If password is invalid, we'll just re-render the page with the form
+}
+
 export default async function Page({ params }: { params: { slug: string } }) {
+	const authenticated = await isAuthenticated(params.slug);
+
+	if (!authenticated) {
+		return (
+			<form action={handlePasswordSubmit}>
+				<input type="hidden" name="slug" value={params.slug} />
+				<PasswordProtection />
+			</form>
+		);
+	}
+
 	const activeEvent = await getActiveEvent({ slug: params.slug });
 
 	if (!activeEvent) {
