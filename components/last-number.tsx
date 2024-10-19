@@ -2,6 +2,7 @@
 
 import type { getGameDrawnNumbers } from "@/utils/bingoUtils";
 import { supabase } from "@/utils/supabase/client";
+import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 type LastNumber = Awaited<ReturnType<typeof getGameDrawnNumbers>>[number];
@@ -45,45 +46,23 @@ export function LastNumber({
     setNumber(lastNumber);
   }, [lastNumber]);
 
-<<<<<<< HEAD
   if (!number) {
     return (
-      <div className="text-center mb-8">
-        <div className="text-6xl md:text-9xl font-bold mb-4 text-primary">
-          -
-        </div>
+      <div className="text-center mb-8 w-full">
         <div className="text-2xl md:text-4xl">Esperando números</div>
+        <div className="text-6xl md:text-9xl font-bold mb-4 text-primary">
+          <Loader2 className="animate-spin" />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="text-center mb-8">
-      <div className="text-6xl md:text-9xl font-bold mb-4 text-primary">
+    <div className="text-center mb-8 w-full">
+      <p className="text-2xl md:text-4xl">Último número</p>
+      <p className="text-6xl md:text-[14rem] font-bold mb-4 text-primary">
         {number.letter}-{number.number}
-      </div>
-      <div className="text-2xl md:text-4xl">Último número</div>
+      </p>
     </div>
   );
-=======
-	if (!number) {
-		return (
-			<div className="text-center mb-8 w-full">
-				<div className="text-2xl md:text-4xl">Esperando números</div>
-				<div className="text-6xl md:text-9xl font-bold mb-4 text-primary">
-					-
-				</div>
-			</div>
-		);
-	}
-
-	return (
-		<div className="text-center mb-8 w-full">
-			<p className="text-2xl md:text-4xl">Último número</p>
-			<p className="text-6xl md:text-[14rem] font-bold mb-4 text-primary">
-				{number.letter}-{number.number}
-			</p>
-		</div>
-	);
->>>>>>> 0a28afeaf018b4092d1ca8859128147fd52a908c
 }
