@@ -4,7 +4,8 @@ import type { getActiveGame } from "@/utils/bingoUtils";
 import { supabase } from "@/utils/supabase/client";
 import { useEffect, useState } from "react";
 import { LastNumber } from "./last-number";
-import { type DrawnNumber, RealtimeNumbers } from "./ui/realtime-numbers";
+import { type DrawnNumber, RealtimeNumbers } from "./bingo";
+import { DrawnNumbers } from "./drawn-numbers";
 
 type ActiveGame = Awaited<ReturnType<typeof getActiveGame>>;
 
@@ -73,8 +74,11 @@ export function RealtimeBingo({
 	const lastNumber = drawnNumbers[0];
 
 	return (
-		<div className="max-w-4xl mx-auto">
-			<LastNumber lastNumber={lastNumber} />
+		<div className="flex gap-4 flex-1 w-full max-md:flex-col">
+			<div className="w-full">
+				<LastNumber lastNumber={lastNumber} />
+				<DrawnNumbers drawnNumbers={drawnNumbers} gameName={activeGame.name} />
+			</div>
 			<RealtimeNumbers drawnNumbers={drawnNumbers} gameName={activeGame.name} />
 		</div>
 	);

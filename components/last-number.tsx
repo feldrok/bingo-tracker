@@ -45,6 +45,7 @@ export function LastNumber({
     setNumber(lastNumber);
   }, [lastNumber]);
 
+<<<<<<< HEAD
   if (!number) {
     return (
       <div className="text-center mb-8">
@@ -64,4 +65,25 @@ export function LastNumber({
       <div className="text-2xl md:text-4xl">Último número</div>
     </div>
   );
+=======
+	if (!number) {
+		return (
+			<div className="text-center mb-8 w-full">
+				<div className="text-2xl md:text-4xl">Esperando números</div>
+				<div className="text-6xl md:text-9xl font-bold mb-4 text-primary">
+					-
+				</div>
+			</div>
+		);
+	}
+
+	return (
+		<div className="text-center mb-8 w-full">
+			<p className="text-2xl md:text-4xl">Último número</p>
+			<p className="text-6xl md:text-[14rem] font-bold mb-4 text-primary">
+				{number.letter}-{number.number}
+			</p>
+		</div>
+	);
+>>>>>>> 0a28afeaf018b4092d1ca8859128147fd52a908c
 }
