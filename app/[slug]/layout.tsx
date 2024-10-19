@@ -13,7 +13,7 @@ export default async function Layout({
   return (
     <>
       <div className="max-w-4xl mx-auto">
-        <div className="flex flex-col md:flex-row items-center justify-center gap-1">
+        <div className="flex flex-col md:flex-row items-center justify-center gap-1 pb-4">
           {activeEvent.logoUrl && (
             <Image
               src={activeEvent.logoUrl}
