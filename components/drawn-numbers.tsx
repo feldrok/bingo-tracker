@@ -59,6 +59,8 @@ export function DrawnNumbers({
     <div className="bg-white bg-opacity-20 rounded-lg p-4 w-full">
       <h2 className="text-2xl md:text-3xl font-bold mb-1">Números sorteados</h2>
       <p className="text-muted-foreground mb-4">{drawnNumbers.length} de 75</p>
+
+      <h3 className="text-xl md:text-2xl font-bold mb-4">{gameName}</h3>
       {numbers.length > 0 ? (
         <div className="flex flex-wrap gap-2">
           {numbers.map((item) => (
