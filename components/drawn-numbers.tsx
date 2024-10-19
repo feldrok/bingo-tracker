@@ -3,6 +3,7 @@
 import { useEffect, useState, useMemo } from "react";
 import type { getGameDrawnNumbers } from "@/utils/bingoUtils";
 import { supabase } from "@/utils/supabase/client";
+import { Loader2 } from "lucide-react";
 
 export type DrawnNumber = Awaited<
   ReturnType<typeof getGameDrawnNumbers>
@@ -53,12 +54,21 @@ export function DrawnNumbers({
 
   return (
     <>
-      <div className="text-center mb-8 w-full">
-        <p className="text-2xl md:text-4xl">Último número</p>
-        <p className="text-6xl md:text-[14rem] font-bold mb-4 text-primary">
-          {numbers[0].letter}-{numbers[0].number}
-        </p>
-      </div>
+      {numbers.length > 0 ? (
+        <div className="text-center mb-8 w-full">
+          <p className="text-2xl md:text-4xl">Último número</p>
+          <p className="text-6xl md:text-[14rem] font-bold mb-4 text-primary">
+            {numbers[0].letter}-{numbers[0].number}
+          </p>
+        </div>
+      ) : (
+        <div className="text-center mb-8 w-full">
+          <div className="text-2xl md:text-4xl">Esperando números</div>
+          <div className="text-6xl md:text-9xl font-bold mb-4 text-primary flex items-center justify-center pt-6">
+            <Loader2 className="animate-spin text-xl" />
+          </div>
+        </div>
+      )}
 
       <div className="bg-white bg-opacity-20 rounded-lg p-4 w-full">
         <h2 className="text-2xl md:text-3xl font-bold mb-1">
