@@ -16,6 +16,7 @@ export const bingoEvents = pgTable("bingo_events", {
 	startDate: timestamp("start_date").notNull(),
 	endDate: timestamp("end_date"),
 	adminPassword: varchar("admin_password", { length: 255 }),
+	logoUrl: varchar("logo_url", { length: 255 }),
 	isActive: boolean("is_active").default(true).notNull(),
 	createdAt: timestamp("created_at").defaultNow().notNull(),
 });
